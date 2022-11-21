@@ -53,14 +53,19 @@ export default function Dashboard({ user }: { user: IUser }) {
           <Logout />
         </div>
         <div className="hidden sm:block lg:block sm:w-1/6 lg:w-1/6"></div>
-        <div className="sm:w-5/6 lg:w-5/6 flex flex-col gap-4 p-4">
+        <div className="sm:w-5/6 lg:w-5/6 flex flex-col gap-2 p-2">
           <div className="flex flex-col">
             <Balance balance={userQuery.data.account.balance} />
-            <History transactions={transactionsQuery.data.transactions} />
+            <History
+              transactions={transactionsQuery.data.transactions}
+              myAccountId={userQuery.data.account.id}
+            />
           </div>
           {usersQuery.data && (
             <SendMoney
-              users={usersQuery.data.users}
+              users={usersQuery.data.users.filter(
+                (item) => item.id !== user.id
+              )}
               myAccount={userQuery.data.account.id}
             />
           )}

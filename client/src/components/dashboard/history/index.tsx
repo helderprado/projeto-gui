@@ -4,7 +4,7 @@ import moment from "moment";
 
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-function History({ transactions }) {
+function History({ transactions, myAccountId }) {
   const [period, setPeriod] = useState([]);
   const [values, setValues] = useState([]);
 
@@ -14,15 +14,27 @@ function History({ transactions }) {
   });
 
   const getTransactionsAmounts = () => {
-    const result = period.map((date) =>
-      transactions
+    const result = period.map((date) => {
+      const debit = transactions
         .filter(
           (item: any) =>
             moment(item.createdAt).format("DD/MM/YYYY") ===
-            moment(date).format("DD/MM/YYYY")
+              moment(date).format("DD/MM/YYYY") &&
+            item.debitAccountId === myAccountId
         )
-        .reduce((acc, item) => acc + item.value, 0)
-    );
+        .reduce((acc, item) => acc + item.value, 0);
+
+      const credit = transactions
+        .filter(
+          (item: any) =>
+            moment(item.createdAt).format("DD/MM/YYYY") ===
+              moment(date).format("DD/MM/YYYY") &&
+            item.creditAccountId === myAccountId
+        )
+        .reduce((acc, item) => acc + item.value, 0);
+
+      return credit - debit;
+    });
 
     return result;
   };
@@ -52,6 +64,15 @@ function History({ transactions }) {
       chart: {
         id: "basic-bar",
       },
+      colors: [
+        function ({ value, seriesIndex, w }) {
+          if (value < 0) {
+            return "#ff0084";
+          } else {
+            return "#39ff14";
+          }
+        },
+      ],
       dataLabels: {
         enabled: true,
         formatter: function (val, opt) {
@@ -66,9 +87,7 @@ function History({ transactions }) {
         categories: period,
         color: "white",
       },
-      fill: {
-        colors: ["#ff0084"],
-      },
+
       title: {
         text: "Movimentações dos últimos 7 dias",
         style: {
@@ -80,7 +99,7 @@ function History({ transactions }) {
     series: [
       {
         name: "saldo",
-        data: values,
+        data: [2, -1, 3, 4, 5, 6, 3],
       },
     ],
   };

@@ -3,20 +3,25 @@ version: "3"
 services:
   client:
     build:
-      context: ./ng-trybe
-    container_name: ng_app_client
+      context: ./client
+      dockerfile: Dockerfile.prod
     ports:
       - 3000:3000
+    command: npm run dev
     volumes:
-      - ./ng-trybe:/app
+      - ./client:/home/app/client
+      - /home/app/client/node_modules
     networks:
       - ng_cash
 
-  app:
-    build: ./api
-    container_name: ng_app
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.prod
     volumes:
-      - ./api:/home/node/app
+      - ./api:/home/app/api
+      - /home/app/api/node_modules
+    command: npm run run-prod
     environment:
       DB_HOST: postgres
       DB_USER: postgres
@@ -26,6 +31,8 @@ services:
       PORT: 8000
     ports:
       - 8000:8000
+    depends_on:
+      - postgres
     networks:
       - ng_cash
 
