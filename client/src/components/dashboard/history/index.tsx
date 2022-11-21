@@ -99,7 +99,7 @@ function History({ transactions, myAccountId }) {
     series: [
       {
         name: "saldo",
-        data: [2, -1, 3, 4, 5, 6, 3],
+        data: values,
       },
     ],
   };
