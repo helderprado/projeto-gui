@@ -13,7 +13,8 @@ const MockRepository = () => {
         findAll: jest.fn(),
         add: jest.fn(),
         update: jest.fn(),
-        findByUsername: jest.fn()
+        findByUsername: jest.fn(),
+        verifyUsername: jest.fn()
     };
 };
 
