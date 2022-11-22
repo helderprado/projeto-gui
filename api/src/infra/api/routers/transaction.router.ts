@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
 import TransactionFacadeFactory from "../../../domain/transactions/factory/facade.factory";
-import UserFacadeFactory from "../../../domain/users/factory/facade.factory";
+import passport from 'passport'
+
 export const transactionRouter = express.Router();
 
-transactionRouter.post("/", async (req: Request, res: Response) => {
+transactionRouter.post("/", passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
 
     const transactionFacade = TransactionFacadeFactory.create()
 
@@ -15,13 +16,15 @@ transactionRouter.post("/", async (req: Request, res: Response) => {
         };
         const output = await transactionFacade.saveTransaction(input);
         res.send(output);
-    } catch (err) {
-        res.status(500).send(err);
+    } catch (err: any) {
+        res.status(500).send({
+            message: err.message
+        });
     }
 });
 
 
-transactionRouter.get("/:id", async (req: Request, res: Response) => {
+transactionRouter.get("/:id", passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
 
     const transactionFacade = TransactionFacadeFactory.create()
 
@@ -31,12 +34,14 @@ transactionRouter.get("/:id", async (req: Request, res: Response) => {
         };
         const output = await transactionFacade.findTransaction(input);
         res.send(output);
-    } catch (err) {
-        res.status(500).send(err);
+    } catch (err: any) {
+        res.status(500).send({
+            message: err.message
+        });
     }
 });
 
-transactionRouter.get("/from_account/:accountId", async (req: Request, res: Response) => {
+transactionRouter.get("/from_account/:accountId", passport.authenticate('jwt', { session: false }), async (req: Request, res: Response) => {
 
     const transactionFacade = TransactionFacadeFactory.create()
 
@@ -46,7 +51,9 @@ transactionRouter.get("/from_account/:accountId", async (req: Request, res: Resp
         };
         const output = await transactionFacade.findTransactionsFromAccount(input);
         res.send(output);
-    } catch (err) {
-        res.status(500).send(err);
+    } catch (err: any) {
+        res.status(500).send({
+            message: err.message
+        });
     }
 });

@@ -7,11 +7,15 @@ import { accountRouter } from "./routers/account.router";
 import { authenticationRouter } from "./routers/authentication.router";
 import { transactionRouter } from "./routers/transaction.router";
 import { userRouter } from "./routers/user.router";
-
-var cors = require('cors')
+import passport from 'passport';
+import cors from 'cors';
 
 export const app: Express = express();
+
 app.use(express.json());
+app.use(passport.initialize());
+
+require('./middlewares/passport-config')(passport);
 
 app.use(cors())
 
@@ -27,6 +31,18 @@ const host = process.env.DB_USER
 const database = process.env.DB_NAME
 const port = process.env.DB_PORT
 const password = process.env.DB_PASSWORD
+
+// async function setupDb() {
+//     sequelize = new Sequelize({
+//         dialect: "sqlite",
+//         storage: ":memory:",
+//         logging: false,
+//         sync: { force: true },
+//     });
+
+//     sequelize.addModels([UserModel, AccountModel, TransactionModel]);
+//     await sequelize.sync();
+// }
 
 
 async function setupDb() {

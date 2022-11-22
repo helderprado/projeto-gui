@@ -18,7 +18,7 @@ export default class Account implements AccountInterface {
     }
 
     validate() {
-        if (this._balance <= 0) {
+        if (this._balance < 0) {
             throw new Error("the account doesn't has the amount for the transaction.")
         }
     }

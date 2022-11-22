@@ -66,4 +66,15 @@ export default class UserRepository implements UserRepositoryInterface {
 
         return new User(userProps);
     }
+
+    async verifyUsername(username: string): Promise<boolean> {
+
+        const userDb = await UserModel.findOne({ where: { username: username } });
+
+        if (userDb) {
+            return true
+        } else {
+            return false
+        }
+    }
 }

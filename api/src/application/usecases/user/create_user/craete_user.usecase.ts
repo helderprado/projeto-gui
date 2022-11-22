@@ -21,6 +21,13 @@ export default class CreateUserUseCase implements UseCaseInterface {
 
     async execute(input: InputCreateUserDto): Promise<OutputCreateUserDto> {
 
+
+        const alreadyAnUser = await this.userRepository.verifyUsername(input.username)
+
+        if (alreadyAnUser) {
+            throw new Error("this username already exists")
+        }
+
         const account = new Account({})
 
         const userProps = {

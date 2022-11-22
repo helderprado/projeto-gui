@@ -85,7 +85,12 @@ function History({ transactions, myAccountId }) {
       xaxis: {
         type: "datetime" as "datetime",
         categories: period,
-        color: "white",
+        labels: {
+          show: true,
+          style: {
+            colors: "#fff",
+          },
+        },
       },
 
       title: {

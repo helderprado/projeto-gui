@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
-import { FormEvent, useContext, useState } from "react";
-import { api } from "./api/api";
+import { FormEvent, useState } from "react";
 import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import Head from "next/head";
 import { useMutation } from "@tanstack/react-query";
 import { authentication } from "../services/authentication";
 import { getUser } from "../services/user";
-import { Context } from "../contexts/Context";
+import Cookies from "js-cookie";
 import Link from "next/link";
 
 export default function Login() {
@@ -29,23 +28,20 @@ export default function Login() {
       password: password,
     };
 
-    const authentication = await authenticationQuery.mutateAsync(input);
-
-    if (!authentication) {
+    try {
+      await authenticationQuery.mutateAsync(input);
+      return router.push({
+        pathname: `/dashboard`,
+      });
+    } catch (err) {
       return toast({
-        title: "Erro nas credenciais.",
-        description: "Login ou senha inválidos.",
+        title: err.response.data.message,
         status: "error",
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
-        position: "bottom-right",
+        position: "top-right",
       });
     }
-
-    router.push({
-      pathname: `/dashboard`,
-      query: { userId: authentication.userId },
-    });
   }
 
   return (

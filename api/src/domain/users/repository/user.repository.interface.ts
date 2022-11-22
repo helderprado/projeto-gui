@@ -5,4 +5,5 @@ export default interface UserRepositoryInterface {
     find(id: string): Promise<User>
     findAll({ }): Promise<User[]>
     findByUsername(username: string): Promise<User>
+    verifyUsername(username: string): Promise<boolean>
 }

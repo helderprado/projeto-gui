@@ -4,8 +4,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import { postUser } from "../services/user";
-import { api } from "./api/api";
+import redirect from "../services/redirect";
+import { getUser, postUser } from "../services/user";
+import cookies from "next-cookies";
 
 export default function Home() {
   const router = useRouter();
@@ -31,10 +32,9 @@ export default function Home() {
         position: "top-right",
       });
       return router.push(`/login`);
-    } catch (error) {
+    } catch (err) {
       return toast({
-        title: "Coletar o erro",
-        description: "Login ou senha inválidos.",
+        title: err.response.data.message,
         status: "error",
         duration: 2000,
         isClosable: true,

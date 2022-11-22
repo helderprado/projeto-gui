@@ -9,6 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getUser, getUsers } from "../services/user";
 import { Spinner } from "@chakra-ui/react";
 import { getUserTransactions } from "../services/transactions";
+import cookies from "next-cookies";
+import redirect from "../services/redirect";
 
 type IUser = {
   id: string;
@@ -82,12 +84,15 @@ export default function Dashboard({ user }: { user: IUser }) {
   );
 }
 
-Dashboard.getInitialProps = async ({ query }) => {
-  const { userId } = query;
+Dashboard.getInitialProps = async (context) => {
+  const userId = cookies(context).user;
+  const token = cookies(context).token;
+
+  if (!userId || !token) {
+    redirect(context, "/login");
+  }
 
   const user = await getUser(userId);
 
-  return {
-    user: user,
-  };
+  return { user: user, page: "Login" };
 };

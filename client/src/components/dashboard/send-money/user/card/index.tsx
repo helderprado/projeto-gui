@@ -59,16 +59,14 @@ function CardUser(props: IUser) {
         isClosable: true,
       });
     } catch (err) {
-      console.log(err);
-      toast({
-        title: `Coletar o erro`,
-        duration: 2000,
+      return toast({
+        title: err.response.data.message,
         status: "error",
-        position: "top",
+        duration: 2000,
         isClosable: true,
+        position: "top-right",
       });
     }
-
     setValue(0);
     await queryClient.invalidateQueries(["transactions"]);
     await queryClient.invalidateQueries(["user"]);

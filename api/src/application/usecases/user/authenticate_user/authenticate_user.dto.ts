@@ -6,4 +6,5 @@ export interface AuthenticateUserInputDto {
 export interface AuthenticateUserOutputDto {
     isAuthenticated: boolean
     userId: string
+    token: string
 }
